@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dark Sky Weekend — Registration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4ECE8; --panel:#FBF6F3; --ink:#2A1A1C; --muted:#7A5F60;
+  --line:#DCC8C2; --accent:#B8322A; --accent-ink:#fff; --ok:#2F6B45; --field:#fff;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#140C0E; --panel:#1E1315; --ink:#EBC8C0; --muted:#A57F7A;
+    --line:#3E2628; --accent:#E0473C; --accent-ink:#140C0E; --ok:#7FBF8E; --field:#261719;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#140C0E; --panel:#1E1315; --ink:#EBC8C0; --muted:#A57F7A;
+  --line:#3E2628; --accent:#E0473C; --accent-ink:#140C0E; --ok:#7FBF8E; --field:#261719;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:17px/1.55 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:48px 20px 80px}
+header h1{font:400 clamp(2.6rem,8vw,4.2rem)/1 "Instrument Serif",Georgia,serif;margin:0 0 12px;letter-spacing:-.01em}
+header p{margin:0;color:var(--muted);max-width:52ch}
+.note{margin-top:20px;padding-left:14px;border-left:3px solid var(--accent);color:var(--muted);font-size:.95rem}
+form{margin-top:40px}
+fieldset{border:0;border-top:1px solid var(--line);margin:0;padding:28px 0 8px}
+legend{font:400 1.6rem/1.2 "Instrument Serif",Georgia,serif;padding:0 0 4px;float:left;width:100%}
+legend + *{clear:both}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;margin-top:14px}
+.full{grid-column:1/-1}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+label,.label{display:block;font-weight:700;font-size:.92rem;margin-bottom:6px}
+.opt{font-weight:400;color:var(--muted)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--field);
+  border:1.5px solid var(--line);border-radius:6px;padding:11px 12px;min-height:46px}
+textarea{min-height:96px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,
+.choice input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+[aria-invalid="true"]{border-color:var(--accent)}
+.err{color:var(--accent);font-size:.88rem;margin-top:6px;min-height:0}
+.err:empty{display:none}
+.hint{color:var(--muted);font-size:.86rem;margin-top:6px}
+.choices{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;width:1px;height:1px}
+.choice span{display:inline-block;padding:9px 16px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;background:var(--field)}
+.choice input:checked + span{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400}
+.check input{width:20px;height:20px;min-height:0;margin-top:3px;accent-color:var(--accent);flex:none}
+.meter{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.hidden{display:none}
+.summary{border:1.5px solid var(--accent);border-radius:6px;padding:14px 16px;margin-bottom:24px}
+.summary h2{font-size:1rem;margin:0 0 6px}
+.summary ul{margin:0;padding-left:20px}
+.summary a{color:var(--accent)}
+.actions{border-top:1px solid var(--line);padding-top:28px;margin-top:20px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+button{font:700 1rem/1 inherit;font-family:inherit;border-radius:6px;padding:15px 24px;cursor:pointer;border:1.5px solid var(--accent)}
+.primary{background:var(--accent);color:var(--accent-ink)}
+.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.done{padding:32px 0;border-top:1px solid var(--line);margin-top:40px}
+.done h2{font:400 2.2rem/1.1 "Instrument Serif",Georgia,serif;margin:0 0 10px}
+.done dl{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:20px 0}
+.done dt{color:var(--muted)}
+.done dd{margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Dark Sky Weekend</h1>
+  <p>Register for three nights of observing at the Cinder Flats site, April 16–19, 2027. Spots are limited to 120 observers.</p>
+  <p class="note">Red lights only on the field after sunset. White light ruins everyone's night vision for 20 minutes.</p>
+</header>
+
+<form id="reg" novalidate>
+  <div id="summary" class="summary hidden" tabindex="-1" role="alert">
+    <h2 id="summaryTitle"></h2>
+    <ul id="summaryList"></ul>
+  </div>
+
+  <fieldset>
+    <legend>About you</legend>
+    <div class="grid">
+      <div><label for="first">First name</label><input id="first" name="first" autocomplete="given-name"><div class="err" id="first-err"></div></div>
+      <div><label for="last">Last name</label><input id="last" name="last" autocomplete="family-name"><div class="err" id="last-err"></div></div>
+      <div><label for="dob">Date of birth</label><input id="dob" name="dob" type="date" autocomplete="bday"><div class="hint">Observers must be 18 or older, or register with a guardian.</div><div class="err" id="dob-err"></div></div>
+      <div><label for="experience">Observing experience</label>
+        <select id="experience" name="experience">
+          <option value="">Choose one</option>
+          <option>First star party</option>
+          <option>A few seasons</option>
+          <option>Seasoned observer</option>
+          <option>Astrophotographer</option>
+        </select><div class="err" id="experience-err"></div></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Contact</legend>
+    <div class="grid">
+      <div class="full"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email"><div class="err" id="email-err"></div></div>
+      <div><label for="phone">Mobile phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="(555) 555-0123"><div class="err" id="phone-err"></div></div>
+      <div><label for="club">Astronomy club <span class="opt">(optional)</span></label><input id="club" name="club" autocomplete="organization"></div>
+      <div class="full"><label for="street">Street address</label><input id="street" name="street" autocomplete="address-line1"><div class="err" id="street-err"></div></div>
+      <div><label for="city">City</label><input id="city" name="city" autocomplete="address-level2"><div class="err" id="city-err"></div></div>
+      <div><label for="state">State</label>
+        <select id="state" name="state" autocomplete="address-level1"></select><div class="err" id="state-err"></div></div>
+      <div><label for="zip">ZIP code</label><input id="zip" name="zip" inputmode="numeric" autocomplete="postal-code" maxlength="10"><div class="err" id="zip-err"></div></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Your stay</legend>
+    <div class="grid">
+      <div><label for="arrive">Arrival</label><input id="arrive" name="arrive" type="date" min="2027-04-16" max="2027-04-18" value="2027-04-16"><div class="err" id="arrive-err"></div></div>
+      <div><label for="depart">Departure</label><input id="depart" name="depart" type="date" min="2027-04-17" max="2027-04-19" value="2027-04-19"><div class="err" id="depart-err"></div></div>
+      <div class="full"><label for="lodging">Where you'll sleep</label>
+        <select id="lodging" name="lodging">
+          <option value="">Choose one</option>
+          <option value="tent">Tent site — $15/night</option>
+          <option value="rv">RV pad, no hookups — $25/night</option>
+          <option value="bunk">Shared bunkhouse — $40/night</option>
+          <option value="offsite">Staying off-site — no charge</option>
+        </select><div class="err" id="lodging-err"></div></div>
+      <div class="full"><span class="label" id="scope-label">Bringing a telescope?</span>
+        <div class="choices" role="radiogroup" aria-labelledby="scope-label">
+          <label class="choice"><input type="radio" name="scope" value="yes"><span>Yes</span></label>
+          <label class="choice"><input type="radio" name="scope" value="no"><span>No, I'll share eyepieces</span></label>
+        </div><div class="err" id="scope-err"></div></div>
+      <div id="apertureWrap" class="full hidden"><label for="aperture">Aperture in inches</label><input id="aperture" name="aperture" type="number" min="2" max="40" step="0.5"><div class="hint">Scopes over 16" get a spot on the north field.</div><div class="err" id="aperture-err"></div></div>
+      <div><label for="shirt">T-shirt size</label>
+        <select id="shirt" name="shirt">
+          <option value="">Choose one</option>
+          <option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option><option>2XL</option><option value="none">No shirt, thanks</option>
+        </select><div class="err" id="shirt-err"></div></div>
+      <div><label for="meals">Meal plan</label>
+        <select id="meals" name="meals">
+          <option value="">Choose one</option>
+          <option>Full plan</option><option>Vegetarian plan</option><option>Vegan plan</option><option>Bringing my own food</option>
+        </select><div class="err" id="meals-err"></div></div>
+      <div class="full"><label for="notes">Anything we should know? <span class="opt">(optional)</span></label><textarea id="notes" name="notes" maxlength="500"></textarea><div class="hint"><span id="notesCount">0</span>/500</div></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Emergency contact</legend>
+    <div class="grid">
+      <div><label for="ecName">Name</label><input id="ecName" name="ecName"><div class="err" id="ecName-err"></div></div>
+      <div><label for="ecPhone">Phone</label><input id="ecPhone" name="ecPhone" type="tel"><div class="err" id="ecPhone-err"></div></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Account</legend>
+    <div class="grid">
+      <div class="full"><label for="username">Username</label><input id="username" name="username" autocomplete="username"><div class="hint">4–20 letters, numbers or underscores.</div><div class="err" id="username-err"></div></div>
+      <div><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password"><div class="meter" aria-hidden="true"><i id="meterBar"></i></div><div class="hint" id="pwHint">At least 8 characters, with a number and a letter.</div><div class="err" id="password-err"></div></div>
+      <div><label for="confirm">Confirm password</label><input id="confirm" name="confirm" type="password" autocomplete="new-password"><div class="err" id="confirm-err"></div></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Agreements</legend>
+    <div class="grid">
+      <div class="full"><label class="check"><input type="checkbox" id="rules" name="rules"><span>I'll follow the field rules: red light only, no car headlights after dusk, and no lasers pointed at the sky.</span></label><div class="err" id="rules-err"></div></div>
+      <div class="full"><label class="check"><input type="checkbox" id="news" name="news"><span>Email me about future dark sky events.</span></label></div>
+    </div>
+  </fieldset>
+
+  <div class="actions">
+    <button type="submit" class="primary">Register</button>
+    <button type="reset" class="ghost">Clear form</button>
+  </div>
+</form>
+
+<section id="done" class="done hidden" tabindex="-1">
+  <h2>You're registered</h2>
+  <p>A confirmation is on its way to <strong id="doneEmail"></strong>.</p>
+  <dl id="doneList"></dl>
+  <button type="button" class="ghost" id="again">Register another observer</button>
+</section>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const form = $('reg');
+
+  const states = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+  $('state').innerHTML = '<option value="">Choose one</option>' + states.map(s=>`<option>${s}</option>`).join('');
+
+  // DOB picker can't be in the future
+  $('dob').max = new Date().toISOString().slice(0,10);
+  $('dob').min = '1900-01-01';
+
+  const digits = v => v.replace(/\D/g,'');
+  const req = (v,msg) => v.trim() ? '' : msg;
+  const parseDate = v => v ? new Date(v + 'T00:00:00') : null;
+  const EVENT_START = parseDate('2027-04-16');
+
+  function age(d){
+    let a = EVENT_START.getFullYear() - d.getFullYear();
+    const m = EVENT_START.getMonth() - d.getMonth();
+    if (m < 0 || (m === 0 && EVENT_START.getDate() < d.getDate())) a--;
+    return a;
+  }
+
+  const rules = {
+    first: v => req(v,'Enter your first name.') || (/^[\p{L}' -]{1,40}$/u.test(v.trim()) ? '' : 'Use letters, spaces, hyphens or apostrophes.'),
+    last:  v => req(v,'Enter your last name.') || (/^[\p{L}' -]{1,40}$/u.test(v.trim()) ? '' : 'Use letters, spaces, hyphens or apostrophes.'),
+    dob: v => {
+      if (!v) return 'Choose your date of birth.';
+      const d = parseDate(v);
+      if (d > new Date()) return 'Date of birth can’t be in the future.';
+      if (d.getFullYear() < 1900) return 'Check the year.';
+      if (age(d) < 18) return 'You’ll be under 18 on April 16, 2027. Have a guardian register with you.';
+      return '';
+    },
+    experience: v => v ? '' : 'Choose your experience level.',
+    email: v => req(v,'Enter your email.') || (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Enter an email like name@example.com.'),
+    phone: v => req(v,'Enter a mobile number.') || (digits(v).length === 10 ? '' : 'Enter a 10-digit phone number.'),
+    street: v => req(v,'Enter your street address.'),
+    city: v => req(v,'Enter your city.'),
+    state: v => v ? '' : 'Choose your state.',
+    zip: v => req(v,'Enter your ZIP code.') || (/^\d{5}(-\d{4})?$/.test(v.trim()) ? '' : 'Use a 5-digit ZIP, or ZIP+4.'),
+    arrive: v => {
+      if (!v) return 'Choose an arrival date.';
+      if (v < '2027-04-16' || v > '2027-04-18') return 'Arrive between April 16 and April 18.';
+      return '';
+    },
+    depart: v => {
+      if (!v) return 'Choose a departure date.';
+      if (v < '2027-04-17' || v > '2027-04-19') return 'Depart between April 17 and April 19.';
+      const a = $('arrive').value;
+      if (a && v <= a) return 'Departure must be after arrival.';
+      return '';
+    },
+    lodging: v => v ? '' : 'Choose where you’ll sleep.',
+    scope: () => form.querySelector('input[name="scope"]:checked') ? '' : 'Tell us whether you’re bringing a telescope.',
+    aperture: v => {
+      if (!scopeYes()) return '';
+      if (!v) return 'Enter your telescope’s aperture.';
+      const n = Number(v);
+      if (isNaN(n) || n < 2 || n > 40) return 'Enter a size between 2 and 40 inches.';
+      return '';
+    },
+    shirt: v => v ? '' : 'Choose a size, or “No shirt.”',
+    meals: v => v ? '' : 'Choose a meal plan.',
+    ecName: v => req(v,'Enter an emergency contact.'),
+    ecPhone: v => {
+      const e = req(v,'Enter their phone number.') || (digits(v).length === 10 ? '' : 'Enter a 10-digit phone number.');
+      if (e) return e;
+      if (digits(v) === digits($('phone').value)) return 'Use a number other than your own.';
+      return '';
+    },
+    username: v => req(v,'Choose a username.') || (/^\w{4,20}$/.test(v) ? '' : 'Use 4–20 letters, numbers or underscores.'),
+    password: v => {
+      if (!v) return 'Create a password.';
+      if (v.length < 8) return 'Use at least 8 characters.';
+      if (!/\d/.test(v) || !/[a-z]/i.test(v)) return 'Include at least one letter and one number.';
+      if ($('username').value && v.toLowerCase().includes($('username').value.toLowerCase())) return 'Don’t include your username.';
+      return '';
+    },
+    confirm: v => req(v,'Re-enter your password.') || (v === $('password').value ? '' : 'Passwords don’t match.'),
+    rules: () => $('rules').checked ? '' : 'Agree to the field rules to register.'
+  };
+
+  const touched = new Set();
+  const scopeYes = () => form.querySelector('input[name="scope"]:checked')?.value === 'yes';
+
+  function fieldEl(name){ return name === 'scope' ? form.querySelector('input[name="scope"]') : $(name); }
+
+  function check(name){
+    const el = fieldEl(name);
+    const msg = rules[name](el.type === 'radio' ? '' : el.value);
+    const err = $(name + '-err');
+    err.textContent = msg;
+    const targets = name === 'scope' ? form.querySelectorAll('input[name="scope"]') : [el];
+    targets.forEach(t => {
+      t.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      t.setAttribute('aria-describedby', err.id);
+    });
+    return msg;
+  }
+
+  // Validate on blur, then live once touched
+  Object.keys(rules).forEach(name => {
+    const els = name === 'scope' ? form.querySelectorAll('input[name="scope"]') : [$(name)];
+    els.forEach(el => {
+      el.addEventListener('blur', () => { touched.add(name); check(name); });
+      el.addEventListener(el.type === 'checkbox' || el.type === 'radio' || el.tagName === 'SELECT' || el.type === 'date' ? 'change' : 'input', () => {
+        if (el.type === 'checkbox' || el.type === 'radio' || el.tagName === 'SELECT') touched.add(name);
+        if (touched.has(name)) check(name);
+      });
+    });
+  });
+
+  // Dependent fields re-check each other
+  const link = (src, dep) => $(src).addEventListener('input', () => touched.has(dep) && check(dep));
+  link('arrive','depart'); link('password','confirm'); link('username','password'); link('phone','ecPhone');
+  $('arrive').addEventListener('change', () => {
+    // keep departure picker from offering dates before arrival
+    if ($('arrive').value) {
+      const next = parseDate($('arrive').value); next.setDate(next.getDate()+1);
+      $('depart').min = next.toISOString().slice(0,10);
+    }
+    if (touched.has('depart')) check('depart');
+  });
+
+  // Phone formatting
+  ['phone','ecPhone'].forEach(id => $(id).addEventListener('input', e => {
+    const d = digits(e.target.value).slice(0,10);
+    e.target.value = d.length > 6 ? `(${d.slice(0,3)}) ${d.slice(3,6)}-${d.slice(6)}` : d.length > 3 ? `(${d.slice(0,3)}) ${d.slice(3)}` : d;
+  }));
+
+  // Telescope conditional
+  form.querySelectorAll('input[name="scope"]').forEach(r => r.addEventListener('change', () => {
+    $('apertureWrap').classList.toggle('hidden', !scopeYes());
+    if (!scopeYes()) { $('aperture').value=''; $('aperture-err').textContent=''; }
+  }));
+
+  // Password meter
+  $('password').addEventListener('input', e => {
+    const v = e.target.value; let s = 0;
+    if (v.length >= 8) s++; if (v.length >= 12) s++;
+    if (/\d/.test(v) && /[a-z]/i.test(v)) s++;
+    if (/[A-Z]/.test(v) && /[a-z]/.test(v)) s++;
+    if (/[^\w]/.test(v)) s++;
+    $('meterBar').style.width = (s/5*100) + '%';
+    $('pwHint').textContent = !v ? 'At least 8 characters, with a number and a letter.' : ['Too short','Weak','Fair','Good','Strong','Very strong'][s];
+  });
+
+  $('notes').addEventListener('input', e => $('notesCount').textContent = e.target.value.length);
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const errors = [];
+    Object.keys(rules).forEach(name => { touched.add(name); const m = check(name); if (m) errors.push([name,m]); });
+    const box = $('summary');
+    if (errors.length) {
+      $('summaryTitle').textContent = `Fix ${errors.length} ${errors.length === 1 ? 'field' : 'fields'} to register`;
+      $('summaryList').innerHTML = errors.map(([n,m]) => `<li><a href="#${fieldEl(n).id || n}" data-f="${n}">${m}</a></li>`).join('');
+      box.classList.remove('hidden');
+      box.focus();
+      box.querySelectorAll('a').forEach(a => a.addEventListener('click', ev => { ev.preventDefault(); fieldEl(a.dataset.f).focus(); }));
+      return;
+    }
+    box.classList.add('hidden');
+    const f = n => form.elements[n].value;
+    const fmt = v => parseDate(v).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+    const nights = (parseDate(f('depart')) - parseDate(f('arrive'))) / 864e5;
+    const rate = {tent:15, rv:25, bunk:40, offsite:0}[f('lodging')];
+    $('doneEmail').textContent = f('email');
+    const rows = [
+      ['Name', `${f('first')} ${f('last')}`],
+      ['Dates', `${fmt(f('arrive'))} to ${fmt(f('depart'))} (${nights} ${nights===1?'night':'nights'})`],
+      ['Lodging', $('lodging').selectedOptions[0].text.split(' —')[0]],
+      ['Telescope', scopeYes() ? `${f('aperture')}" aperture` : 'None'],
+      ['Lodging total', `$${rate * nights}`]
+    ];
+    $('doneList').innerHTML = rows.map(([k,v]) => `<dt>${k}</dt><dd></dd>`).join('');
+    $('doneList').querySelectorAll('dd').forEach((dd,i) => dd.textContent = rows[i][1]);
+    form.classList.add('hidden');
+    $('done').classList.remove('hidden');
+    $('done').focus();
+  });
+
+  form.addEventListener('reset', () => {
+    touched.clear();
+    setTimeout(() => {
+      form.querySelectorAll('.err').forEach(e => e.textContent = '');
+      form.querySelectorAll('[aria-invalid]').forEach(e => e.removeAttribute('aria-invalid'));
+      $('summary').classList.add('hidden');
+      $('apertureWrap').classList.add('hidden');
+      $('meterBar').style.width = '0';
+      $('notesCount').textContent = '0';
+      $('depart').min = '2027-04-17';
+    });
+  });
+
+  $('again').addEventListener('click', () => {
+    form.reset();
+    $('done').classList.add('hidden');
+    form.classList.remove('hidden');
+    $('first').focus();
+  });
+})();
+</script>
+</body>
+</html>
